@@ -1,0 +1,14 @@
+# Sort for rolling windows
+df_gold = df_silver.sort_values(by=['machine_id', 'timestamp'])
+
+# Rolling mean (example window=5)
+df_gold['temp_roll_avg'] = df_gold.groupby('machine_id')['temperature'].rolling(window=5, min_periods=1).mean().reset_index(0, drop=True)
+df_gold['temp_diff'] = df_gold.groupby('machine_id')['temperature'].diff()
+
+df_gold['pressure_roll_avg'] = df_gold.groupby('machine_id')['pressure'].rolling(window=5, min_periods=1).mean().reset_index(0, drop=True)
+df_gold['vibration_roll_avg'] = df_gold.groupby('machine_id')['vibration'].rolling(window=5, min_periods=1).mean().reset_index(0, drop=True)
+
+# Final dataset for ML
+features = ['temperature', 'pressure', 'vibration', 'rpm', 'temp_roll_avg', 'temp_diff', 'pressure_roll_avg', 'vibration_roll_avg']
+X = df_gold[features].fillna(0)
+y = df_gold['is_failure']

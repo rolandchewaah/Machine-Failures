@@ -1,0 +1,6 @@
+import pandas as pd
+
+# Load raw data
+df_bronze = pd.read_csv("sensor.csv")
+print(df_bronze.head())  # BEGIN: Added print statement for clarity
+# END:

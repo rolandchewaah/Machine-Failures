@@ -1,0 +1,12 @@
+# Clean column names
+df_silver = df_bronze.copy()
+df_silver.columns = [col.strip().lower().replace(" ", "_") for col in df_silver.columns]
+
+# Convert timestamp
+df_silver['timestamp'] = pd.to_datetime(df_silver['timestamp'])
+
+# Derive label
+df_silver['is_failure'] = df_silver['error_code'].notnull().astype(int)
+
+# Drop rows with null critical values
+df_silver.dropna(subset=['machine_id', 'timestamp', 'temperature'], inplace=True)
